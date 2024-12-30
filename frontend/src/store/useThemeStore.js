@@ -7,3 +7,4 @@ export const useThemeStore = create((set) => ({
     set({ theme });
   },
 }));
+
