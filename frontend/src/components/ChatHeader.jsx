@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
+import Modal from "./Modal";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
@@ -13,7 +14,11 @@ const ChatHeader = () => {
           {/* Avatar */}
           <div className="avatar">
             <div className="size-10 rounded-full relative">
-              <img src={selectedUser.profilePic || "/avatar.png"} alt={selectedUser.fullName} />
+                <img  onClick={() =>
+                  document.getElementById("my_modal_3").showModal()}
+                  src={selectedUser.profilePic || "/avatar.png"}
+                  alt={selectedUser.fullName}
+                />
             </div>
           </div>
 
@@ -31,8 +36,8 @@ const ChatHeader = () => {
           <X />
         </button>
       </div>
+      <Modal />
     </div>
   );
 };
 export default ChatHeader;
-
