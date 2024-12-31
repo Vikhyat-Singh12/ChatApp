@@ -44,20 +44,29 @@ export const sendMessage = async (req, res) => {
 
     let imageUrl;
     if (image) {
-      // Upload base64 image to cloudinary
-      const uploadResponse = await cloudinary.uploader.upload(image);
+      // Upload base64 image to Cloudinary with transformations
+      const uploadResponse = await cloudinary.uploader.upload(image, {
+        transformation: [
+          { width: 500, height: 500, crop: "limit" }, // Limit dimensions to 500x500 pixels
+          { quality: "auto" }, // Automatic compression
+          { format: "webp" }, // Convert to WebP format
+        ],
+      });
       imageUrl = uploadResponse.secure_url;
     }
 
+    // Create a new message document
     const newMessage = new Message({
       senderId,
       receiverId,
       text,
-      image: imageUrl,
+      image: imageUrl, // Include the transformed image URL if present
     });
 
+    // Save the message to the database
     await newMessage.save();
 
+    // Emit the message to the receiver's socket if connected
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);

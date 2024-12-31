@@ -89,14 +89,23 @@ export const logout = (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { profilePic } = req.body;
+    const { profilePic } = req.body;                                             // Expecting a base64-encoded image string
     const userId = req.user._id;
 
     if (!profilePic) {
       return res.status(400).json({ message: "Profile pic is required" });
     }
 
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    // Upload the image to Cloudinary with transformations
+    const uploadResponse = await cloudinary.uploader.upload(profilePic, {
+      transformation: [
+        { width: 300, height: 300, crop: "fill" },                                         // Resize to 300x300 pixels
+        { quality: "auto" },                                                               // Compress image automatically
+        { format: "webp" },                                                                // Convert to WebP format
+      ],
+    });
+
+    // Update the user's profile with the transformed image URL
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { profilePic: uploadResponse.secure_url },
@@ -105,10 +114,11 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("error in update profile:", error);
+    console.log("Error in update profile:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 export const updatename = async (req, res) => {
   try {
