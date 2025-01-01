@@ -153,7 +153,7 @@ const ProfilePage = () => {
       </div>
 
       {/* Calling the modal */}
-      <Modal/>
+      <Modal user = {authUser}/>
     </div>
   );
 };

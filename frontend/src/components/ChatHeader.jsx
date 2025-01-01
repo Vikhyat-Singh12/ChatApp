@@ -13,7 +13,7 @@ const ChatHeader = () => {
         <div className="flex items-center gap-3">
           {/* Avatar */}
           <div className="avatar">
-            <div className="size-10 rounded-full relative">
+            <div className="size-10 rounded-full relative cursor-pointer">
                 <img  onClick={() =>
                   document.getElementById("my_modal_3").showModal()}
                   src={selectedUser.profilePic || "/avatar.png"}
@@ -36,7 +36,7 @@ const ChatHeader = () => {
           <X />
         </button>
       </div>
-      <Modal />
+      <Modal user = {selectedUser} />
     </div>
   );
 };
